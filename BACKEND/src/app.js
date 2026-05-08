@@ -15,7 +15,10 @@ import { errorHandler } from "./middleware/errorHandler.js";
 // Gestion des erreurs 
 const app = express(); 
 app.use(helmet()); 
-app.use(cors()); 
+app.use(cors({
+    origin: "http://localhost:5173", 
+    credentials: true
+})); 
 app.use(cookieParser()); 
 
 // On bloque 15 minutes si des gens envoies des choses sans requête ( idéal contre la force brute)

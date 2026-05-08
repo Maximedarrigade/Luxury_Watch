@@ -49,19 +49,48 @@ export const MontreModel = {
 
     }, 
 
-async getAllMontres() {
+    async getAllMontres() {
+
     const [rows] = await pool.query(`
+
             SELECT m.id, m.nom, m.prix, m.description, m.stock, m.categorie_id, 
             COALESCE(JSON_ARRAYAGG(IF(i.id IS NOT NULL, JSON_OBJECT('id', i.id, 'url', i.url, 'principale', i.principale), NULL)), JSON_ARRAY()) AS images 
             FROM montres m 
             LEFT JOIN images i ON m.id = i.montre_id 
             GROUP BY m.id 
             ORDER BY m.id DESC
-    `);
+            
+        `);
+
         return rows;
+
+    }, 
+
+    async getByCategorie(categorie_id) {
+
+        const [rows] = await pool.query("SELECT * FROM montres WHERE categorie_id = ?", [categorie_id]); 
+
+        return rows; 
+        
+    }, 
+
+    async search(query) {
+
+      const [rows] = await pool.query(
+
+        `SELECT m.*, c.nom as marque FROM montres m 
+        LEFT JOIN categories c ON m.categorie_id = c.id
+        WHERE m.nom LIKE ? OR c.nom LIKE ?`,
+        [`%${query}%`, `%${query}%`]
+    
+    );
+
+    return rows;
+
     }
 
 }; 
+
 
 
 

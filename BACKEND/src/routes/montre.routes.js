@@ -1,5 +1,5 @@
 import express from 'express'; 
-import { getMontre, createMontre, updateMontre, deleteMontre, getMontreById } from '../controllers/montre.controller.js';
+import { getMontre, createMontre, updateMontre, deleteMontre, getMontreById, getMontresByCategories, getBySearch } from '../controllers/montre.controller.js';
 import { validate } from '../middleware/validate.js';
 import { upload } from '../middleware/upload.js';
 import { createMontreSchema } from '../schemas/montre.schema.js';
@@ -10,6 +10,8 @@ const router = express.Router();
 // Routes pour récupérer un élément 
 
 router.get('/', getMontre); 
+router.get('/categorie/:id', getMontresByCategories);
+router.get("/search", getBySearch);
 router.get('/:id', getMontreById); 
 
 // Routes pour créer / modifier / supprimer des éléments 

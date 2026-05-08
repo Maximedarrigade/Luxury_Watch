@@ -83,5 +83,42 @@ export const getMontreById = async (req, res, next) => {
     } catch (error) {
         
         next(error); 
+
     }
+
+}; 
+
+export const getMontresByCategories = async (req, res, next) => {
+
+    try {
+        
+        const montres = await MontreModel.getByCategorie(req.params.id); 
+
+        if(!montres) return res.status(404).json({message: "Montre introuvable"}); 
+
+        res.json(montres); 
+
+    } catch (error) {
+        
+        next(error); 
+
+    }
+    
+}; 
+
+export const getBySearch = async (req, res, next) => {
+
+    try {
+        
+        const {query} = req.query; // On récupère les termes de le recherche
+        const montres = await MontreModel.search(query); 
+
+        res.json(montres)
+
+    } catch (error) {
+        
+        next(error); 
+
+    }
+
 }; 
