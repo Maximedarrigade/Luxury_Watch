@@ -6,7 +6,7 @@ export const getMontre = async (req, res, next) => {
 
     try {
         
-        res.json(await MontreModel.getAll());
+        res.json(await MontreModel.getAllMontres());
 
     } catch (error) {
         
@@ -22,13 +22,17 @@ export const createMontre = async (req, res, next) => {
         
         const id = await MontreModel.create(req.body); 
 
-        if(req.file) {
+        if(req.files && req.files.length > 0) {
 
-            const url = await uploadImage(req.file)
+            for(let i = 0; i < req.files.length; i++){
+
+            const url = await uploadImage(req.files[i])
             
             await MontreModel.addImage(id, url)
 
         }
+
+    }
 
         res.status(201).json({id});
 
@@ -45,6 +49,17 @@ export const updateMontre = async (req, res, next) => {
         const result = await MontreModel.updateById(req.params.id, req.body);
         
         if(!result) return res.status(404).json({message: "Montre introuvable"}); 
+
+        if(req.files && req.files.length > 0) {
+
+            for(let i = 0; i < req.files.length; i++) {
+
+                const url = await uploadImage(req.files[i]); 
+
+                await MontreModel.addImage(req.params.id, url); 
+
+            }
+        }
 
         res.json({message: "Montre mise a jour"}); 
 
@@ -92,7 +107,7 @@ export const getMontresByCategories = async (req, res, next) => {
 
     try {
         
-        const montres = await MontreModel.getByCategorie(req.params.id); 
+        const montres = await MontreModel.getByCategorieImages(req.params.id); 
 
         if(!montres) return res.status(404).json({message: "Montre introuvable"}); 
 

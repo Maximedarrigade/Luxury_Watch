@@ -28,7 +28,9 @@ const MontresPage = () => {
 
                         <Link to={`/montres/${montre.id}`} style={{color:"#DCDBD4", borderColor:"#DCDBD4"}}>
 
-                            <div className="card text-center p-3" style={{cursor:"pointer"}}>
+                            <div className="row" style={{cursor:"pointer"}}>
+
+                                <img src={montre.images[0]?.url} alt={montre.nom} className="img-fluid" style={{height: "400px", objectFit: "contain"}}/>
 
                                 <h3>{montre.nom}</h3>
 

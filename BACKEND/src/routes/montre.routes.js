@@ -16,8 +16,8 @@ router.get('/:id', getMontreById);
 
 // Routes pour créer / modifier / supprimer des éléments 
 
-router.post('/', authMiddleware, authorize(["admin"]), upload.single("image"),validate(createMontreSchema), createMontre); 
-router.put('/:id',authMiddleware,  authorize(["admin"]), updateMontre); 
+router.post('/', authMiddleware, authorize(["admin"]), upload.array("images"),validate(createMontreSchema), createMontre); 
+router.put('/:id',authMiddleware,  authorize(["admin"]), upload.array("images"), updateMontre); 
 router.delete('/:id', authMiddleware, authorize(["admin"]), deleteMontre); 
 
 export default router; 

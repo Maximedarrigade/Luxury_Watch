@@ -62,6 +62,12 @@ const Header = () => {
 
                         <>
 
+                            {user.role === "admin" && (
+
+                                <Link to="/admin" className="btn" style={{color: "#DCDBD4", borderColor: "#DCDBD4"}}>Admin</Link>
+                                
+                            )}
+
                             <button className="btn" onClick={logout} style={{color: "#DCDBD4", borderColor: "#DCDBD4"}}>Déconnexion</button>
 
                         </>

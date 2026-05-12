@@ -19,6 +19,7 @@ const MarquesPage = () => {
 
         <div className="container mt-5">
 
+
             <h2 className="container mt-5">Nos Marques</h2>
 
             <div className="row">
@@ -30,10 +31,10 @@ const MarquesPage = () => {
                         <Link to={`/marques/${categorie.id}`} style={{color:"#DCDBD4", borderColor:"#DCDBD4"}}>
                         
                             <div className="card text-center p-3" style={{cursor:"pointer"}}>
-                            
-                                <h3>{categorie.nom}</h3>
 
-                                <p>{categorie.description}</p>
+                                    <h3>{categorie.nom}</h3>
+
+                                        <p>{categorie.description}</p>
                             
                             </div>
                         

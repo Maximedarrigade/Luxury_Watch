@@ -26,9 +26,18 @@ export const MontreModel = {
 
      async getById(id) {
         
-        const [rows] = await pool.query("SELECT * FROM montres WHERE id = ?",[id]);
+        const [rows] = await pool.query(`
 
-        return rows[0]; // Retourne la montre trouvée, ou undefined si elle n'existe pas
+        SELECT m.*, 
+        COALESCE(JSON_ARRAYAGG(IF(i.id IS NOT NULL, JSON_OBJECT('id', i.id, 'url', i.url, 'principale', i.principale), NULL)), JSON_ARRAY()) AS images 
+        FROM montres m 
+        LEFT JOIN images i ON m.id = i.montre_id 
+        WHERE m.id = ?
+        GROUP BY m.id
+
+    `, [id]);
+
+        return rows[0];
     
     },
 
@@ -74,6 +83,23 @@ export const MontreModel = {
         
     }, 
 
+    async getByCategorieImages(categorie_id) {
+
+        const [rows] = await pool.query(`
+
+        SELECT m.*, 
+        COALESCE(JSON_ARRAYAGG(IF(i.id IS NOT NULL, JSON_OBJECT('id', i.id, 'url', i.url, 'principale', i.principale), NULL)), JSON_ARRAY()) AS images 
+        FROM montres m 
+        LEFT JOIN images i ON m.id = i.montre_id 
+        WHERE m.categorie_id = ?
+        GROUP BY m.id
+
+    `, [categorie_id]);
+
+        return rows;
+
+    },
+
     async search(query) {
 
       const [rows] = await pool.query(
@@ -87,7 +113,7 @@ export const MontreModel = {
 
     return rows;
 
-    }
+    } 
 
 }; 
 

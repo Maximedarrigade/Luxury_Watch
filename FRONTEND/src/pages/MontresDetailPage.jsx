@@ -5,11 +5,12 @@ import api from "../api/axios.js";
 const MontresDetailPage = () => {
 
     const {id} = useParams(); // On récupère l'id de la montre dans l'URL
-    const [montre, setMontre] = useState(null); // State pour stocker UNE seule montre
+    const [montre, setMontre] = useState(null); // State pour stocker une seule montre
+    const [image, setImage] = useState(0); // State pour l'index de l'image principale affichée
 
     useEffect(() => {
-
-        // On récupère la montre par son id
+        
+        // On récupère la montre par son id depuis l'API
         api.get(`/montres/${id}`)
             .then((res) => setMontre(res.data))
             .catch((error) => console.error(error)); 
@@ -17,33 +18,113 @@ const MontresDetailPage = () => {
     }, [id]); 
 
     return (
-
         <div className="container mt-5">
 
-            {/* On affiche le nom de la montre ou "Chargement" si les données ne sont pas encore arrivées */}
+            {/* Si la montre est chargée on affiche son contenu, sinon on affiche "Chargement..." */}
             {montre ? (
+                <>
+                    <div className="row">
 
-                <div className="card text-center p-3">
+                        {/* Colonne gauche - Images de la montre */}
+                        <div className="col-md-6">
 
-                    <h2>{montre.nom}</h2>
+                            {/* Grande image principale - change selon l'index "image" */}
+                            <img src={montre.images[image]?.url} alt={montre.nom} className="img-fluid w-100" style={{height: "500px", objectFit: "contain"}}/>
 
-                        <p>{montre.prix} €</p>
+                            {/* Miniatures cliquables - chaque clic change l'image principale */}
+                            <div className="d-flex gap-2 mt-3">
 
-                        <p>{montre.description}</p>
+                                {montre.images.map((img, index) => (
 
-                </div>
+                                    <img key={img.id}src={img.url}alt={montre.nom}onClick={() => setImage(index)} style={{width: "80px", height: "80px", objectFit: "cover", cursor: "pointer", border: image === index ? "2px solid #DCDBD4" : "2px solid transparent"}}/>
 
+                                ))}
+
+                            </div>
+
+                        </div>
+
+                        {/* Colonne droite - Informations de la montre */}
+                        <div className="col-md-6" style={{color: "#DCDBD4"}}>
+                            <h1>{montre.nom}</h1>
+                            <h3 className="mt-5">{montre.prix} €</h3>
+                            <p className="mt-3">{montre.description}</p>
+                            <p>Stock : {montre.stock}</p>
+                            {/* Bouton pour ajouter la montre au panier */}
+                            <button className="btn mt-3 w-100" style={{color: "#DCDBD4", borderColor: "#DCDBD4"}}>
+                                Ajouter au panier
+                            </button>
+                        </div>
+
+                    </div>
+
+                    {/* Carrousel - affiché uniquement si la montre a des images */}
+                    {montre.images.length > 0 && (
+
+                        <div id="carouselImages" className="carousel slide mt-5" data-bs-ride="carousel">
+
+                            <div className="carousel-inner">
+
+                                {/* On groupe les images par 2 grâce à Array.from et Math.ceil */}
+                                {/* Math.ceil arrondit à l'entier supérieur pour gérer les nombres impairs d'images */}
+                                {Array.from({length: Math.ceil(montre.images.length / 2)}).map((_, index) => (
+                                    <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
+
+                                        <div className="row">
+
+                                            {/* Image gauche du slide - index * 2 donne 0, 2, 4... */}
+                                            {montre.images[index * 2] && (
+
+                                                <div className="col-6">
+
+                                                    <img src={montre.images[index * 2].url} alt={montre.nom} className="img-fluid w-100" style={{height: "700px", objectFit: "contain", cursor: "pointer"}} onClick={() => setImage(index * 2)}/> 
+                                                    
+                                                </div>
+
+                                            )}
+
+                                            {/* Image droite du slide - index * 2 + 1 donne 1, 3, 5... */}
+                                            {montre.images[index * 2 + 1] && (
+
+                                                <div className="col-6">
+
+                                                    <img src={montre.images[index * 2 + 1].url} alt={montre.nom} className="img-fluid w-100" style={{height: "700px", objectFit: "contain", cursor: "pointer"}} onClick={() => setImage(index * 2 + 1)}/>
+                                                    
+                                                </div>
+
+                                            )}
+
+                                        </div>
+
+                                    </div>
+
+                                ))}
+
+                            </div>
+
+                            {/* Flèche gauche pour aller au slide précédent */}
+                            <button className="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+
+                                <span className="carousel-control-prev-icon"/>
+
+                            </button>
+
+                            {/* Flèche droite pour aller au slide suivant */}
+                            <button className="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+
+                                <span className="carousel-control-next-icon"/>
+                                
+                            </button>
+
+                        </div>
+                    )}
+                </>
             ) : (
-
-                // On déclare une condition pour dire que " si la montre existe, on affiche le resultat, mais que si la montre est encore (null) on envoie "chargement..."
+                // Si la montre n'est pas encore chargée on affiche un message
                 <p>Chargement...</p>
-
             )}
-
         </div>
-
     )
-
 };
 
 export default MontresDetailPage;

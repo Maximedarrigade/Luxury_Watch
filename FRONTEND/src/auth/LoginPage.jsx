@@ -63,8 +63,11 @@ const LoginPage = () => {
     return (
 
         <>
+
             <h1 className="text-center mt-5">Connexion</h1>
+
             <Form inputs={fields} onSubmit={onSubmit} submitLabel={"Connexion"}/>
+            
         </>
 
     );

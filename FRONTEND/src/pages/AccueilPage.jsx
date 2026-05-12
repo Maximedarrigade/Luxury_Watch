@@ -67,36 +67,49 @@ const AccueilPage = () => {
 
             </div>
 
-            <h2 className="container mt-5"> Nos coups de coeurs</h2>
+                    {/* Carrousel coups de coeur */}
 
-            <div className="row">
+                    <h2 className="container mt-5">Nos coups de coeur</h2>
 
-                {/* Avec " . slice(0, 4)" on demande a voir les 4 premières montres */}
-                {montres.slice(0, 4).map((montre) => (
+                        <div id="carouselMontres" className="carousel slide mt-5" data-bs-ride="carousel">
 
-                    <div key={montre.id} className="col-md-4 mb-3">
+                            <div className="carousel-inner">
 
-                        {/*  Lien vers la page détail de la montre */}
-                        <Link to={`/montres/${montre.id}`} className="col-mb-4 mb-3">
+                                {montres.slice(0, 4).map((montre, index) => (
 
-                            <div className="card text-center p-3">
+                                    <div key={montre.id} className={`carousel-item ${index === 0 ? "active" : ""}`}>
 
-                                <h3>{montre.nom}</h3>
+                                        <Link to={`/montres/${montre.id}`}>
 
-                                <p>{montre.description}</p>
+                                        <img src={montre.images[0]?.url} alt={montre.nom} className="d-block w-100" style={{height: "400px", objectFit: "contain"}}/>
+
+                                            <div className="carousel-caption"/>
+
+                                        </Link>
+
+                                    </div>
+
+                                ))}
 
                             </div>
 
-                        </Link>
-                        
-                    </div>
+                                {/* Boutons précédent/suivant */}
+                                <button className="carousel-control-prev" type="button" data-bs-target="#carouselMontres" data-bs-slide="prev">
 
-                ))}
+                                    <span className="carousel-control-prev-icon"/>
+
+                                </button>
+
+                                    <button className="carousel-control-next" type="button" data-bs-target="#carouselMontres" data-bs-slide="next">
+                                        
+                                        <span className="carousel-control-next-icon"/>
+    
+                                    </button>
+
+                            </div>
 
 
-            </div>
-
-             <div className="text-center mt-4"> 
+             <div className="text-center mt-4">
 
                     {/* Bouton pour voir toutes les montres */}
                     <Link to="/montres" className="btn" style={{color:"#DCDBD4", borderColor:"#DCDBD4"}}>Voir toutes les montres</Link>

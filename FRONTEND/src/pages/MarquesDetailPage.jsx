@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import api from "../api/axios.js";
 
 const MarquesDetailPage = () => {
@@ -34,16 +34,19 @@ const MarquesDetailPage = () => {
                 {montres.map((montre) => (
 
                     <div key={montre.id} className="col-md-4 mb-3">
+                        
+                        <Link to={`/montres/${montre.id}`}>
+                            <div className="card text-center p-3">
 
-                        <div className="card text-center p-3">
+                                <img src={montre.images[0]?.url} alt={montre.nom} className="img-fluid"/>
 
-                            <h3>{montre.id}</h3>
+                                    <h3>{montre.nom}</h3>
 
-                            <p>{montre.prix}</p>
+                                        <p>{montre.prix} €</p>
 
-                            <p>{montre.description}</p>
+                            </div>
 
-                        </div>
+                        </Link>
 
                     </div>
 
