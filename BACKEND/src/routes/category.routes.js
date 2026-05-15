@@ -3,6 +3,7 @@ import { getCategories, createCategory, updateCategory, deleteCategory, getCateg
 import { validate } from "../middleware/validate.js";
 import { createCategorySchema } from "../schemas/category.schema.js";
 import { authMiddleware, authorize } from "../middleware/auth.middleware.js";
+import { upload } from "../middleware/upload.js";
 
 
 const router = express.Router()
@@ -14,8 +15,8 @@ router.get('/:id', getCategoryById);
 
 // Routes pour créer / modifier / supprimer des éléments 
 
-router.post('/', authMiddleware, authorize(["admin"]), validate(createCategorySchema), createCategory); 
-router.put('/:id', authMiddleware, authorize(["admin"]), updateCategory); 
+router.post('/', authMiddleware, authorize(["admin"]), upload.single("image"), validate(createCategorySchema), createCategory); 
+router.put('/:id', authMiddleware, authorize(["admin"]), upload.single("image"), updateCategory); 
 router.delete('/:id', authMiddleware, authorize(["admin"]), deleteCategory); 
 
 export default router; 

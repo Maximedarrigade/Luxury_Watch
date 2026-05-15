@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios.js";
+import { useCart } from "../context/CartContext.jsx";
 
 const MontresDetailPage = () => {
 
     const {id} = useParams(); // On récupère l'id de la montre dans l'URL
     const [montre, setMontre] = useState(null); // State pour stocker une seule montre
     const [image, setImage] = useState(0); // State pour l'index de l'image principale affichée
+    const {addPanier} = useCart(); 
 
     useEffect(() => {
         
@@ -22,14 +24,15 @@ const MontresDetailPage = () => {
 
             {/* Si la montre est chargée on affiche son contenu, sinon on affiche "Chargement..." */}
             {montre ? (
+
                 <>
                     <div className="row">
 
                         {/* Colonne gauche - Images de la montre */}
                         <div className="col-md-6">
 
-                            {/* Grande image principale - change selon l'index "image" */}
-                            <img src={montre.images[image]?.url} alt={montre.nom} className="img-fluid w-100" style={{height: "500px", objectFit: "contain"}}/>
+                            {/* Grande image principale */}
+                            <img src={montre.images[image]?.url} alt={montre.nom} className="img-fluid w-100" style={{height: "500px", objectFit: "cover"}}/>
 
                             {/* Miniatures cliquables - chaque clic change l'image principale */}
                             <div className="d-flex gap-2 mt-3">
@@ -46,14 +49,18 @@ const MontresDetailPage = () => {
 
                         {/* Colonne droite - Informations de la montre */}
                         <div className="col-md-6" style={{color: "#DCDBD4"}}>
+
                             <h1>{montre.nom}</h1>
+
                             <h3 className="mt-5">{montre.prix} €</h3>
-                            <p className="mt-3">{montre.description}</p>
+
+                            <p className="mt-3" style={{textAlign:"justify"}}>{montre.description}</p>
+
                             <p>Stock : {montre.stock}</p>
+
                             {/* Bouton pour ajouter la montre au panier */}
-                            <button className="btn mt-3 w-100" style={{color: "#DCDBD4", borderColor: "#DCDBD4"}}>
-                                Ajouter au panier
-                            </button>
+                            <button className="btn mt-3 w-100" style={{color: "#DCDBD4", borderColor: "#DCDBD4"}}onClick={() => addPanier(montre)}>Ajouter au panier</button>
+
                         </div>
 
                     </div>
@@ -61,34 +68,35 @@ const MontresDetailPage = () => {
                     {/* Carrousel - affiché uniquement si la montre a des images */}
                     {montre.images.length > 0 && (
 
-                        <div id="carouselImages" className="carousel slide mt-5" data-bs-ride="carousel">
+                        <div id="carouselImages" className="carousel carousel-fade slide mt-5" data-bs-ride="carousel">
 
                             <div className="carousel-inner">
 
                                 {/* On groupe les images par 2 grâce à Array.from et Math.ceil */}
                                 {/* Math.ceil arrondit à l'entier supérieur pour gérer les nombres impairs d'images */}
                                 {Array.from({length: Math.ceil(montre.images.length / 2)}).map((_, index) => (
+
                                     <div key={index} className={`carousel-item ${index === 0 ? "active" : ""}`}>
 
                                         <div className="row">
 
-                                            {/* Image gauche du slide - index * 2 donne 0, 2, 4... */}
+                                            {/* Image gauche du slide */}
                                             {montre.images[index * 2] && (
 
-                                                <div className="col-6">
+                                                <div className="col-6" style={{padding: 0}}>
 
-                                                    <img src={montre.images[index * 2].url} alt={montre.nom} className="img-fluid w-100" style={{height: "700px", objectFit: "contain", cursor: "pointer"}} onClick={() => setImage(index * 2)}/> 
+                                                    <img src={montre.images[index * 2].url} alt={montre.nom} className="img-fluid w-100" style={{height: "700px", width: "100%", objectFit: "cover", cursor: "pointer"}} onClick={() => setImage(index * 2)}/> 
                                                     
                                                 </div>
 
                                             )}
 
-                                            {/* Image droite du slide - index * 2 + 1 donne 1, 3, 5... */}
+                                            {/* Image droite du slide  */}
                                             {montre.images[index * 2 + 1] && (
 
-                                                <div className="col-6">
+                                                <div className="col-6" style={{padding: 0}}>
 
-                                                    <img src={montre.images[index * 2 + 1].url} alt={montre.nom} className="img-fluid w-100" style={{height: "700px", objectFit: "contain", cursor: "pointer"}} onClick={() => setImage(index * 2 + 1)}/>
+                                                    <img src={montre.images[index * 2 + 1].url} alt={montre.nom} className="img-fluid w-100" style={{height: "700px",width: "100%", objectFit: "cover", cursor: "pointer"}} onClick={() => setImage(index * 2 + 1)}/>
                                                     
                                                 </div>
 
@@ -117,14 +125,22 @@ const MontresDetailPage = () => {
                             </button>
 
                         </div>
+
                     )}
+
                 </>
+
             ) : (
+
                 // Si la montre n'est pas encore chargée on affiche un message
                 <p>Chargement...</p>
+
             )}
+
         </div>
+
     )
+
 };
 
 export default MontresDetailPage;

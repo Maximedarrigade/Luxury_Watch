@@ -30,11 +30,13 @@ const MarquesPage = () => {
                         
                         <Link to={`/marques/${categorie.id}`} style={{color:"#DCDBD4", borderColor:"#DCDBD4"}}>
                         
-                            <div className="card text-center p-3" style={{cursor:"pointer"}}>
+                            <div className="card text-center p-3 h-100" style={{cursor:"pointer"}}>
+
+                                <img src={categorie.image} alt={categorie.nom} className="img-fluid" style={{height: "400px", objectFit: "contain"}}/>
 
                                     <h3>{categorie.nom}</h3>
 
-                                        <p>{categorie.description}</p>
+                                    <p>{categorie.description}</p>
                             
                             </div>
                         

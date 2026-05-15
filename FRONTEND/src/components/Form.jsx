@@ -13,9 +13,9 @@ const Form = ({inputs, onSubmit, submitLabel}) => {
                     
                     <div className="text-center mt-5" key={input.name}>
 
-                        <label>{input.label}</label>
+                        <label className="form-label w-100">{input.label}</label>
 
-                        <input type={input.type} {... register(input.name, input.validation )}/>
+                        <input className="form-control" type={input.type} {... register(input.name, input.validation )}/>
 
                         {errors [input.name] && (<p>{errors[input.name].message}</p>)}
 

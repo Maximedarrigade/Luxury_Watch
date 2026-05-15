@@ -12,6 +12,8 @@ import MarquesDetailPage from "./pages/MarquesDetailPage.jsx";
 import MontresPage from "./pages/MontresPage.jsx";
 import MontresDetailPage from "./pages/MontresDetailPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
+import PanierPage from "./pages/PanierPage.jsx";
 
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
 
         <Routes>
 
-                {/* Page publique */}
+                {/* Route publique */}
 
             <Route path="/" element={<AccueilPage/>}/>
             <Route path="/register" element={<RegisterPage/>}/>
@@ -31,21 +33,24 @@ function App() {
             <Route path="/marques/:id" element={<MarquesDetailPage/>}/>
             <Route path="/montres" element={<MontresPage/>}/>
             <Route path="/montres/:id" element={<MontresDetailPage/>}/>
+            <Route path="/search" element={<SearchPage/>}/>
 
-                {/* Page privée */}
+                {/* Route privée */}
 
             <Route element={<PrivateRoute/>}>
-
+            <Route path="/panier" element={<PanierPage/>}/>
+           
 
             </Route>
 
-                {/* Page admin */}
+                {/* Route admin */}
             
             <Route element={<AdminRoute/>}>
+            <Route path="/admin" element={<AdminPage/>}/>
 
-                <Route path="/admin" element={<AdminPage/>}/>
-
+            
             </Route>
+            
 
 
         </Routes>

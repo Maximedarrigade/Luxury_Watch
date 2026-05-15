@@ -13,7 +13,7 @@ const LoginPage = () => {
 
         if(user) {
 
-            navigate(-1);
+            navigate("/");
 
         }
 

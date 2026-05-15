@@ -102,18 +102,23 @@ export const MontreModel = {
 
     async search(query) {
 
-      const [rows] = await pool.query(
+    const [rows] = await pool.query(
 
-        `SELECT m.*, c.nom as marque FROM montres m 
+        `SELECT m.*, c.nom as marque,
+        COALESCE(JSON_ARRAYAGG(IF(i.id IS NOT NULL, JSON_OBJECT('id', i.id, 'url', i.url, 'principale', i.principale), NULL)), JSON_ARRAY()) AS images 
+        FROM montres m 
         LEFT JOIN categories c ON m.categorie_id = c.id
-        WHERE m.nom LIKE ? OR c.nom LIKE ?`,
+        LEFT JOIN images i ON m.id = i.montre_id
+        WHERE m.nom LIKE ? OR c.nom LIKE ?
+        GROUP BY m.id`,
+
         [`%${query}%`, `%${query}%`]
-    
+
     );
 
     return rows;
-
-    } 
+    
+    }, 
 
 }; 
 

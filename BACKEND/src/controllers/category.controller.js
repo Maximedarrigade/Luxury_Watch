@@ -1,4 +1,5 @@
 import { CategoryModel } from "../models/category.model.js";
+import { uploadImage } from "../services/image.service.js";
 
 export const getCategories = async (req, res, next) => {
 
@@ -16,7 +17,15 @@ export const createCategory = async (req, res, next) => {
 
     try {
         
-        res.status(201).json(await CategoryModel.create(req.body)); 
+        let imageUrl = null;
+        
+        if(req.file) {
+
+            imageUrl = await uploadImage(req.file); 
+
+        }
+
+        res.status(201).json(await CategoryModel.create({...req.body, image: imageUrl})); 
         
     } catch (error) {
         
@@ -29,8 +38,16 @@ export const createCategory = async (req, res, next) => {
 export const updateCategory = async (req, res, next) => {
 
     try {
+
+        let imageUrl = req.body.image; 
         
-        const result = await CategoryModel.updateById(req.params.id, req.body); 
+        if(req.file) {
+
+            imageUrl = await uploadImage(req.file);
+
+        }
+        
+        const result = await CategoryModel.updateById(req.params.id, {...req.body, image: imageUrl}); 
 
         if(!result) return res.status(404).json({message: "Catégorie introuvable"}); 
 

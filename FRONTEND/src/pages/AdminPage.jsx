@@ -5,18 +5,26 @@ import { useForm } from "react-hook-form";
 
 const AdminPage = () => {
 
-    const navigate = useNavigate(); 
-    const [image, setImage] = useState([]); // State pour les images 
+    const navigate = useNavigate();
+    
+    // Pour les montres 
+    const [image, setImage] = useState([]); // State pour les images des montres
     const [montres, setMontres] = useState([]); // State pour les montres 
     const [categories, setCategories] = useState([]); // State pour les marques 
     const [modifierMontre, setModifierMontre] = useState(null); // State pour modier une montre
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
+    // Pour les catégories
+    const [imageCategorie, setImageCategorie] = useState(null); 
+    const [categories2, setCategories2] = useState([]);
+    const [modifierCategorie, setModifierCategorie] = useState(null); 
+    const {register: registerCategorie, handleSubmit: handleSubmitCategorie, formState: {errors: errorsCategorie}, reset: resetCategorie} = useForm(); // On renomme le "register, handleSubmit, errors, reset" avec " : " pour les catégories pour pas se tromper avec ceux des montres  
+
     useEffect(() => {
 
         // On récupère toutes les marques
         api.get("/categories")
-            .then((res) => setCategories(res.data))
+            .then((res) => {setCategories(res.data); setCategories2(res.data);})
             .catch((error) => console.error(error)); 
 
             // On récupère toutes les montres 
@@ -26,6 +34,7 @@ const AdminPage = () => {
 
     }, []);
 
+    // Fontion de modification des montres 
     const handleModifier = (montre) => {
 
         setModifierMontre(montre); 
@@ -112,12 +121,97 @@ const AdminPage = () => {
 
     }; 
 
+    // Fonction pour la modification des marques 
+    const onSubmitCategorie = async(data) => {
+
+        try {
+            
+            const formData = new FormData(); 
+
+            formData.append("nom", data.nom_categorie); 
+            formData.append("description", data.description_categorie); 
+
+            if(imageCategorie) formData.append("image", imageCategorie); 
+
+            await api.post("/categories", formData); 
+
+            alert("Catégorie ajoutée avec succès !"); 
+
+            const res = await api.get("/categories"); 
+
+            setCategories2(res.data); 
+            setCategories(res.data); 
+            resetCategorie({}); 
+            setImageCategorie(null); 
+
+        } catch (error) {
+            
+            alert(error.response?.data?.message); 
+        }
+    }; 
+
+    const handleModifierCategorie = (categorie) => {
+
+        setModifierCategorie(categorie);
+        resetCategorie({nom_categorie: categorie.nom, description_categorie: categorie.description});
+
+    };
+
+
+    const handleSubmitModifierCategorie = async(data) => {
+
+        try {
+
+            const formData = new FormData();
+
+            formData.append("nom", data.nom_categorie);
+            formData.append("description", data.description_categorie);
+
+            if(imageCategorie) formData.append("image", imageCategorie);
+
+            await api.put(`/categories/${modifierCategorie.id}`, formData);
+
+            alert("Catégorie modifiée avec succès !");
+
+            setModifierCategorie(null);
+            resetCategorie({});
+
+            const res = await api.get("/categories");
+
+            setCategories2(res.data);
+            setCategories(res.data);
+
+        } catch (error) {
+
+            alert(error.response?.data?.message);
+
+        }
+
+    };
+
+      const handleDeleteCategorie = async(id) => {
+
+        try {
+
+            await api.delete(`/categories/${id}`);
+
+            setCategories2(categories2.filter((c) => c.id !== id));
+            alert("Catégorie supprimée !");
+
+        } catch (error) {
+
+            alert(error.response?.data?.message);
+
+        }
+
+    };
+
 
     return (
 
         <div className="container mt-5">
 
-            {/* Ajouter ou modifierune montre */}
+            {/* Ajouter ou modifier une montre */}
             <h2 className="text-center">{modifierMontre ? "Modifier une montre" : "Ajouter une montre"}</h2>
 
             <form 
@@ -201,6 +295,7 @@ const AdminPage = () => {
 
                     <button className="btn w-100 mt-3" type="submit" style={{color: "#DCDBD4", borderColor: "#DCDBD4"}}>{modifierMontre ? "Modifier" : "Ajouter"}</button>
 
+                    {/* On fait apparaitre le bouton modifier que si on a cliquer sur modifier une montre dans la liste */}
                     {modifierMontre && (
 
                         <button className="btn w-100 mt-3" type="button" style={{color: "red", borderColor: "red"}} onClick={() => {setModifierMontre(null); reset({}); setImage([]);}}>Annuler</button>
@@ -250,6 +345,93 @@ const AdminPage = () => {
                     </div>
 
                 ))}
+
+                 {/* Ajouter ou modifier une catégorie */}
+            <h2 className="text-center mt-5">{modifierCategorie ? "Modifier une marque" : "Ajouter une marque"}</h2>
+
+            <form onSubmit={handleSubmitCategorie(modifierCategorie ? handleSubmitModifierCategorie : onSubmitCategorie)} style={{border: "1px solid #DCDBD4", borderRadius: "8px", padding: "30px", maxWidth: "400px", margin: "0 auto"}}>
+
+                <div className="mb-3">
+
+                    <label>Nom de la marque</label>
+
+                    <input className="form-control mt-2" type="text" {...registerCategorie("nom_categorie", {required: "Nom requis"})}/>
+                    {errorsCategorie.nom_categorie && <p style={{color: "red"}}>{errorsCategorie.nom_categorie.message}</p>}
+
+                </div>
+
+                <div className="mb-3">
+
+                    <label>Description</label>
+
+                    <input className="form-control mt-2" type="text" {...registerCategorie("description_categorie", {required: "Description requise"})}/>
+
+                    {errorsCategorie.description_categorie && <p style={{color: "red"}}>{errorsCategorie.description_categorie.message}</p>}
+
+                </div>
+
+                <div className="mb-3">
+
+                    <label>Image de la marque</label>
+
+                    <input className="form-control mt-2" type="file" onChange={(e) => setImageCategorie(e.target.files[0])}/>
+
+                </div>
+
+                <div className="d-flex gap-2">
+
+                    <button className="btn w-100 mt-3" type="submit" style={{color: "#DCDBD4", borderColor: "#DCDBD4"}}>
+
+                    {modifierCategorie ? "Modifier" : "Ajouter"}</button>
+
+                    {/* On fait apparaitre le bouton modifier que si on a cliquer sur modifier une marque dans la liste */}
+                    {modifierCategorie && (  
+
+                        <button className="btn w-100 mt-3" type="button" style={{color: "red", borderColor: "red"}} onClick={() => {setModifierCategorie(null); resetCategorie({});}}>Annuler</button>
+
+                    )}
+
+                </div>
+
+            </form>
+
+            {/* Liste des catégories */}
+            <h2 className="text-center mt-5">Liste des marques</h2>
+
+            <div className="row fw-bold mb-2" style={{color:"#DCDBD4", borderBottom:"1px solid #DCDBD4"}}>
+
+                <div className="col-2">Image</div>
+                <div className="col-3">Nom</div>
+                <div className="col-4">Description</div>
+                <div className="col-3">Actions</div>
+
+            </div>
+
+            {categories2.map((categorie) => (
+
+                <div key={categorie.id} className="row align-items-center mb-3" style={{color:"#DCDBD4", borderBottom:"1px solid #DCDBD4"}}>
+
+                    <div className="col-2">
+
+                        <img src={categorie.image} alt={categorie.nom} style={{width: "80px", height: "80px", objectFit: "cover"}}/>
+
+                    </div>
+
+                    <div className="col-3">{categorie.nom}</div>
+
+                    <div className="col-4">{categorie.description}</div>
+
+                    <div className="col-3 d-flex gap-2">
+
+                        <button className="btn btn-sm" style={{color:"#DCDBD4", borderColor:"#DCDBD4"}} onClick={() => handleModifierCategorie(categorie)}>Modifier</button>
+
+                        <button className="btn btn-sm" style={{color:"red", borderColor:"red"}} onClick={() => handleDeleteCategorie(categorie.id)}>Supprimer</button>
+
+                    </div>
+
+                </div>
+
+            ))}
 
         </div>
 

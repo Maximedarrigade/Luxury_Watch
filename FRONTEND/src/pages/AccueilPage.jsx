@@ -46,6 +46,8 @@ const AccueilPage = () => {
 
                             <div className="card text-center p-3">
 
+                                <img src={categorie.image} alt={categorie.nom} className="img-fluid" style={{height: "200px", objectFit: "contain"}}/>
+
                                 <h3>{categorie.nom}</h3>
 
                                 <p>{categorie.description}</p>

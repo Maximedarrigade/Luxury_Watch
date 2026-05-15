@@ -79,8 +79,8 @@ export const register = async (req, res, next) => {
 
         const user = await UserModel.create({...req.body, mot_de_passe: passwordHash});
 
-        res.cookie('verifyToken', verifyToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 }); // Création d'un cookie qui contient le token UUID, inaccessible en JavaScript et qui expire dans 30 jours
-        res.cookie('verifyEmail', email, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 }); // On stocke aussi l'email dans le cookie au cas ou l'utilisateur clique sur le liens pour vérifier son compte 1h plus tard 
+        res.cookie('verifyToken', verifyToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: "lax"}); // Création d'un cookie qui contient le token UUID, inaccessible en JavaScript et qui expire dans 30 jours
+        res.cookie('verifyEmail', email, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: "lax" }); // On stocke aussi l'email dans le cookie au cas ou l'utilisateur clique sur le liens pour vérifier son compte 1h plus tard 
 
         await sendVerificationEmail (email, verifyToken); 
         

@@ -5,7 +5,7 @@ export const CategoryModel = {
     
     async create(data) {
         
-        const [res] = await pool.query("INSERT INTO categories (nom, description) VALUES (?, ?)", [data.nom, data.description])
+        const [res] = await pool.query("INSERT INTO categories (nom, description, image) VALUES (?, ?, ?)", [data.nom, data.description, data.image || null])
         
         return {id: res.insertId, ...data}; 
         
@@ -29,7 +29,7 @@ export const CategoryModel = {
 
     async updateById(id, data) {
 
-        const [res] = await pool.query("UPDATE categories SET nom = ?, description = ? WHERE id = ?", [data.nom, data.description, id]); 
+        const [res] = await pool.query("UPDATE categories SET nom = ?, description = ?, image = ? WHERE id = ?", [data.nom, data.description,data.image || null, id]); 
 
         return res.affectedRows; 
     },
