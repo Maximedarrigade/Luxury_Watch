@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import categoryRoutes from "./routes/category.routes.js";
 import montreRoutes from "./routes/montre.routes.js"; 
 import userRoutes from "./routes/auth.routes.js";
+import commandesRouter from "./routes/commande.routes.js"; 
 import { errorHandler } from "./middleware/errorHandler.js";
 
 // Gestion des erreurs 
@@ -21,8 +22,8 @@ app.use(cors({
 })); 
 app.use(cookieParser()); 
 
-// On bloque 15 minutes si des gens envoies des choses sans requête ( idéal contre la force brute)
-app.use(rateLimit({windowMs: 15 * 60 * 1000, max: 100})) 
+// On bloque 15 minutes si des gens envoie des choses sans requête ( idéal contre la force brute)
+app.use(rateLimit({windowMs: 15 * 60 * 1000, max: 1000})) 
 
 // On limite les requêtes en json pour éviter d'avoir des fuites 
 app.use(express.json({limit: "10kb"})) 
@@ -31,6 +32,7 @@ app.use(express.json({limit: "10kb"}))
 app.use("/api/categories", categoryRoutes); 
 app.use("/api/montres", montreRoutes); 
 app.use("/api/users", userRoutes); 
+app.use("/api/commandes", commandesRouter);
 
 app.use((req, res) => {
 

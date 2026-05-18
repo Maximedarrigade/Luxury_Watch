@@ -8,14 +8,12 @@ import { authMiddleware } from "../middleware/auth.middleware.js";
 const router = express.Router(); 
 
 // Routes pour récupérer des utilisateurs 
-
 router.get("/", getUser); 
 router.get("/verify", verifyEmail);  
 router.get("/me", authMiddleware, getMe); 
 router.get("/:id", getUserById);
 
 // Routes pour créer / modifier / supprimer des utilisateurs 
-
 router.post("/register", validateRegister, register); 
 router.post("/login",validateLogin, login); 
 router.post("/logout", logout);

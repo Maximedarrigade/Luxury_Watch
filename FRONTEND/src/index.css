@@ -1,8 +1,33 @@
 body {
-
-    background-color: #0B0F19;
-    color: #DCDBD4;
-    font-family: 'ElroNet Monospace';
-
+  background-color: #0b0f19;
+  color: #dcdbd4;
+  font-family: "ElroNet Monospace";
 }
 
+/* Carousel MontresDetail.jsx */
+.carousel-img {
+    height: 700px;
+    object-fit: cover;
+    width: 100%;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .carousel-img {
+        height: 300px;
+        object-fit: contain;
+        background-color: white;
+    }
+}
+
+/* Carousel AcceuilPage.jsx */
+.carousel-accueil {
+    height: 500px;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .carousel-accueil {
+        height: 250px;
+    }
+}

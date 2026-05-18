@@ -9,12 +9,10 @@ import { upload } from "../middleware/upload.js";
 const router = express.Router()
 
 // Routes pour récupérer un élément
-
 router.get('/', getCategories); 
 router.get('/:id', getCategoryById); 
 
 // Routes pour créer / modifier / supprimer des éléments 
-
 router.post('/', authMiddleware, authorize(["admin"]), upload.single("image"), validate(createCategorySchema), createCategory); 
 router.put('/:id', authMiddleware, authorize(["admin"]), upload.single("image"), updateCategory); 
 router.delete('/:id', authMiddleware, authorize(["admin"]), deleteCategory); 

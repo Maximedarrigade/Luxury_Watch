@@ -53,3 +53,24 @@ CREATE TABLE IF NOT EXISTS users (
     adresse TEXT,
     date_inscription TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
+
+-- Table des commandes
+CREATE TABLE commandes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    total DECIMAL(10, 2) NOT NULL,
+    statut ENUM('en attente', 'validée', 'expédiée', 'livrée') DEFAULT 'en attente',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Table de liaison commandes/montres
+CREATE TABLE commandes_montres (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    commande_id INT NOT NULL,
+    montre_id INT NOT NULL,
+    quantite INT NOT NULL,
+    prix DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (commande_id) REFERENCES commandes(id),
+    FOREIGN KEY (montre_id) REFERENCES montres(id)
+);

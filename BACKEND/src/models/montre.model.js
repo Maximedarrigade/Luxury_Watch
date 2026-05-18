@@ -52,6 +52,10 @@ export const MontreModel = {
 
     async deleteById(id) {
 
+        await pool.query("DELETE FROM images WHERE montre_id = ?", [id]);
+
+        await pool.query("DELETE FROM commandes_montres WHERE montre_id = ?", [id])
+        
         const [res] = await pool.query("DELETE FROM montres WHERE id = ?", [id]); 
 
         return res.affectedRows; 
