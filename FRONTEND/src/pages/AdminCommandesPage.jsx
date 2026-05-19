@@ -73,7 +73,7 @@ const AdminCommandesPage = () => {
                 €
               </h4>
 
-              {/* En-tête du tableau - caché sur mobile */}
+              {/* En-tête du tableau */}
               <div
                 className="row fw-bold mb-2 d-none d-md-flex"
                 style={{ color: "#DCDBD4", borderBottom: "1px solid #DCDBD4" }}
@@ -84,7 +84,7 @@ const AdminCommandesPage = () => {
                 <div className="col-4">Statut</div>
               </div>
 
-              {/* Commandes de cet utilisateur */}
+              {/* Commandes utilisateur */}
               {commandesUser.map((commande) => (
                 <div
                   key={commande.id}

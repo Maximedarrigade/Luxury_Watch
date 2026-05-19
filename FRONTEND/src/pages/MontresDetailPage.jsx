@@ -30,6 +30,7 @@ const MontresDetailPage = () => {
                 className="img-fluid w-100"
                 style={{ height: "500px", objectFit: "contain" }}
               />
+
               {/* Miniatures cliquables */}
               <div className="d-flex gap-2 mt-3">
                 {montre.images.map((img, index) => (
@@ -96,18 +97,19 @@ const MontresDetailPage = () => {
                           <img
                             src={montre.images[index * 2].url}
                             alt={montre.nom}
-                            className="carousel-img img-fluid w-100" // ✅
+                            className="carousel-img img-fluid w-100"
                             onClick={() => setImage(index * 2)}
                           />
                         </div>
                       )}
+
                       {/* Image droite du slide */}
                       {montre.images[index * 2 + 1] && (
                         <div className="col-6" style={{ padding: 0 }}>
                           <img
                             src={montre.images[index * 2 + 1].url}
                             alt={montre.nom}
-                            className="carousel-img img-fluid w-100" // ✅
+                            className="carousel-img img-fluid w-100"
                             onClick={() => setImage(index * 2 + 1)}
                           />
                         </div>
@@ -116,6 +118,7 @@ const MontresDetailPage = () => {
                   </div>
                 ))}
               </div>
+
               {/* Flèche gauche */}
               <button
                 className="carousel-control-prev"
@@ -125,6 +128,7 @@ const MontresDetailPage = () => {
               >
                 <span className="carousel-control-prev-icon" />
               </button>
+
               {/* Flèche droite */}
               <button
                 className="carousel-control-next"

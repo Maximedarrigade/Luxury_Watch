@@ -19,6 +19,7 @@ const AccueilPage = () => {
 
   return (
     <div className="container mt-5">
+      
       {/* Image de présentation */}
       <img
         src="/montres-francaises.jpg"

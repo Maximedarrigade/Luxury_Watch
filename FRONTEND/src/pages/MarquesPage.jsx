@@ -6,10 +6,12 @@ const MarquesPage = () => {
   const [categories, setCategories] = useState([]); // State pour stocker la liste des marques récupérées depui l' api
 
   useEffect(() => {
+
     // On récupère toutes les marques des montres
     getCategories()
       .then((data) => setCategories(data))
       .catch((error) => console.error(error));
+      
   }, []);
 
   return (
